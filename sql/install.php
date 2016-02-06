@@ -1,5 +1,6 @@
+<?php
 /**
-* 2007-2015 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,21 +19,32 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2015 PrestaShop SA
+*  @copyright 2007-2014 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*
-* Don't forget to prefix your containers with your own identifier
-* to avoid any conflicts with others containers.
 */
-$(function() {
-    $(".bandeau-promo").each(function() {
-        var duration = $(this).data('duration');
-        var self = this;
-        if(duration>0) {
-            setTimeout(function() {
-                $(self).hide();
-            },duration*1000);
-        }
-    });
-});
+
+$sql = array();
+
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'miwbandeauxpromo` (
+  `id_bandeau` INT(11) NOT NULL AUTO_INCREMENT,
+  `date_start` DATETIME NULL,
+  `date_end` DATETIME NULL,
+  `active` TINYINT NOT NULL DEFAULT 0,
+  `duration` INT(11) NOT NULL DEFAULT 30,
+  `link` VARCHAR(500) NULL DEFAULT 0,
+  PRIMARY KEY (`id_bandeau`),
+  KEY `date_start` (`date_start`),
+  KEY `date_end` (`date_end`)
+) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'miwbandeauxpromo_lang` (
+  `id_bandeau` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_lang` INT(11) NULL,
+  `text` VARCHAR(500) NOT NULL,
+  PRIMARY KEY (`id_bandeau`,`id_lang`)
+) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8;';
+
+foreach ($sql as $query)
+	if (Db::getInstance()->execute($query) == false)
+		return false;

@@ -53,16 +53,44 @@ class BandeauPromo extends Module
     {
         Configuration::updateValue('BANDEAUPROMO_LIVE_MODE', false);
 
-        return parent::install() &&
+        include(dirname(__FILE__).'/sql/install.php');
+
+        $status = parent::install() &&
         $this->registerHook('header') &&
         $this->registerHook('displayFooter') &&
         $this->registerHook('displayBanner') &&
         $this->registerHook('displayTop');
+
+        if($status)
+        {
+            $tab = new Tab();
+            $tab->active = 1;
+            $tab->class_name = 'AdminBandeauxPromo';
+            $tab->name = array();
+            foreach (Language::getLanguages(true) as $lang) {
+                $tab->name[$lang['id_lang']] = 'bandeaux promotionnels';
+            }
+            // sous l'onglet catalogue
+            $tab->id_parent = (int)Tab::getIdFromClassName('AdminCatalog');
+            $tab->position = 99;
+            $tab->module = $this->name;
+            $status &= $tab->add();
+        }
+
+        return $status;
     }
 
     public function uninstall()
     {
+
+        include(dirname(__FILE__).'/sql/uninstall.php');
+
         Configuration::deleteByName('BANDEAUPROMO_LIVE_MODE');
+
+        $tab = new Tab(Tab::getIdFromClassName('AdminBandeauxPromo'));
+        if(Validate::isLoadedObject($tab))
+            $tab->delete();
+
 
         return parent::uninstall();
     }
@@ -217,16 +245,23 @@ class BandeauPromo extends Module
     public function hookDisplayBanner()
     {
         /* Place your code here. */
-        $is_live = Configuration::get('BANDEAUPROMO_LIVE_MODE');
-        if($is_live) {
-            $texte = Configuration::get('BANDEAUPROMO_TEXTE');
-            if (!empty($texte)) {
+        $id_lang = Context::getContext() -> language -> id;
+        $messages = Db::getInstance() -> executeS("
+            SELECT text, duration FROM
+                ps_miwbandeauxpromo b
+                INNER JOIN ps_miwbandeauxpromo_lang bl ON bl.id_bandeau = b.id_bandeau AND bl.id_lang = ".(int)$id_lang ."
+            WHERE
+                active = 1
+                AND (date_start = '0000-00-00 00:00:00' OR date_start <= NOW())
+                AND (date_end = '0000-00-00 00:00:00' OR date_end >= NOW())
+            ORDER BY date_start DESC, date_end ASC	-- celui qui commence le plus tard, ou celui qui termine le plus tôt
+            ");
 
-                $this->smarty->assign(array(
-                    "bandeau_texte" => $texte
-                ));
-                return $this->display(__FILE__, "bandeau.tpl");
-            }
+        if (!empty($messages)) {
+            $this->smarty->assign(array(
+                "messages" => $messages
+            ));
+            return $this->display(__FILE__, "header.tpl");
         }
         return "";
     }
