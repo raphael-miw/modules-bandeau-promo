@@ -219,12 +219,15 @@ class BandeauPromo extends Module
         /* Place your code here. */
         $is_live = Configuration::get('BANDEAUPROMO_LIVE_MODE');
         if($is_live) {
-            $this -> smarty -> assign(array(
-                "bandeau_texte" => Configuration::get('BANDEAUPROMO_TEXTE')
-            ));
-            return $this -> display(__FILE__,"bandeau.tpl");
-        } else {
-            return "";
+            $texte = Configuration::get('BANDEAUPROMO_TEXTE');
+            if (!empty($texte)) {
+
+                $this->smarty->assign(array(
+                    "bandeau_texte" => $texte
+                ));
+                return $this->display(__FILE__, "bandeau.tpl");
+            }
         }
+        return "";
     }
 }
