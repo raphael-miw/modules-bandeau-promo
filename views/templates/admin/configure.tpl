@@ -1,4 +1,4 @@
-/**
+{*
 * 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -21,16 +21,28 @@
 *  @copyright 2007-2015 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*
-* Don't forget to prefix your containers with your own identifier
-* to avoid any conflicts with others containers.
-*/
+*}
 
-.bandeau-promo {
-    color: white;
-    background-color: red;
-    font-weight: bold;
-    text-align: center;
-    width: 100%;
-    min-height: 18px;
-}
+<div class="panel">
+	<h3><i class="icon icon-credit-card"></i> {l s='mymodule' mod='mymodule'}</h3>
+	<p>
+		<strong>{l s='Here is my new generic module!' mod='mymodule'}</strong><br />
+		{l s='Thanks to PrestaShop, now I have a great module.' mod='mymodule'}<br />
+		{l s='I can configure it using the following configuration form.' mod='mymodule'}
+	</p>
+	<br />
+	<p>
+		{l s='This module will boost your sales!' mod='mymodule'}
+	</p>
+</div>
+
+<div class="panel">
+	<h3><i class="icon icon-tags"></i> {l s='Documentation' mod='mymodule'}</h3>
+	<p>
+		&raquo; {l s='You can get a PDF documentation to configure this module' mod='mymodule'} :
+		<ul>
+			<li><a href="#" target="_blank">{l s='English' mod='mymodule'}</a></li>
+			<li><a href="#" target="_blank">{l s='French' mod='mymodule'}</a></li>
+		</ul>
+	</p>
+</div>

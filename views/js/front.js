@@ -25,12 +25,3 @@
 * Don't forget to prefix your containers with your own identifier
 * to avoid any conflicts with others containers.
 */
-
-.bandeau-promo {
-    color: white;
-    background-color: red;
-    font-weight: bold;
-    text-align: center;
-    width: 100%;
-    min-height: 18px;
-}
