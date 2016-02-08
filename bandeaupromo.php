@@ -248,8 +248,8 @@ class BandeauPromo extends Module
         $id_lang = Context::getContext() -> language -> id;
         $messages = Db::getInstance() -> executeS("
             SELECT text, duration FROM
-                ps_miwbandeauxpromo b
-                INNER JOIN ps_miwbandeauxpromo_lang bl ON bl.id_bandeau = b.id_bandeau AND bl.id_lang = ".(int)$id_lang ."
+                "._DB_PREFIX_."miwbandeauxpromo b
+                INNER JOIN "._DB_PREFIX_."miwbandeauxpromo_lang bl ON bl.id_bandeau = b.id_bandeau AND bl.id_lang = ".(int)$id_lang ."
             WHERE
                 active = 1
                 AND (date_start = '0000-00-00 00:00:00' OR date_start <= NOW())
