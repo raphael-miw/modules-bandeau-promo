@@ -31,7 +31,7 @@ class Bandeau extends ObjectModel
                 'lang' => true
             ),
             'duration' => array('type' => self::TYPE_INT),
-            'link' => array('type' => self::TYPE_STRING, 'validate' => 'isLinkRewrite'),
+            'link' => array('type' => self::TYPE_STRING),
             'active' => array('type' => self::TYPE_BOOL),
         )
     );
